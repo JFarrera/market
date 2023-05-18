@@ -155,6 +155,7 @@ export async function transformPublishFormToDdo(
     type: access,
     files: filesEncrypted || '',
     datatokenAddress,
+    // serviceEndpoint: providerUrl.url,
     serviceEndpoint: providerUrl.url,
     timeout: mapTimeoutStringToSeconds(timeout),
     ...(access === 'compute' && {

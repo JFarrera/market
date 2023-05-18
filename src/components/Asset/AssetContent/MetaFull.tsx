@@ -17,7 +17,7 @@ export default function MetaFull({ ddo }: { ddo: Asset }): ReactElement {
         const web3 = await getDummyWeb3(ddo.chainId)
         const datatoken = new Datatoken(web3)
         setPaymentCollector(
-          await datatoken.getPaymentCollector(ddo.datatokens[0].address)
+          await datatoken.getPaymentCollector(ddo?.datatokens[0].address)
         )
       } catch (error) {
         LoggerInstance.error('[MetaFull: getInitialPaymentCollector]', error)
