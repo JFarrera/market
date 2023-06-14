@@ -79,7 +79,7 @@ export async function transformPublishFormToDdo(
     dockerImageCustomEntrypoint,
     dockerImageCustomChecksum
   } = metadata
-  const { access, files, links, providerUrl, timeout } = services[0]
+  const { access, files, links, providerUrl, timeout, assistant } = services[0]
 
   const did = nftAddress ? generateDid(nftAddress, chainId) : '0x...'
   const currentTime = dateToStringNoMS(new Date())
@@ -160,7 +160,8 @@ export async function transformPublishFormToDdo(
     timeout: mapTimeoutStringToSeconds(timeout),
     ...(access === 'compute' && {
       compute: values.services[0].computeOptions
-    })
+    }),
+    assistant
   }
 
   const newDdo: DDO = {

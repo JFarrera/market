@@ -16,6 +16,7 @@ import TabsFile from '@shared/atoms/TabsFile'
 import useDarkMode from '@oceanprotocol/use-dark-mode'
 import appConfig from '../../../../../app.config'
 import { extensions, oceanTheme } from '@utils/codemirror'
+import DynamicInputs from './Assistant/assistant'
 
 const cx = classNames.bind(styles)
 
@@ -63,6 +64,9 @@ export default function InputElement({
   const darkMode = useDarkMode(false, appConfig?.darkModeConfig)
 
   switch (props.type) {
+    case 'assistant': {
+      return <DynamicInputs />
+    }
     case 'select': {
       const sortedOptions =
         !sortOptions && sortOptions === false

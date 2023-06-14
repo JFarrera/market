@@ -5,6 +5,7 @@ export interface FormPublishService {
   files: FileInfo[]
   links?: FileInfo[]
   timeout: string
+  assistant: any[]
   dataTokenOptions: { name: string; symbol: string }
   access: 'Download' | 'Compute' | string
   providerUrl: { url: string; valid: boolean; custom: boolean }

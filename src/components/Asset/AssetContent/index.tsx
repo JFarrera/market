@@ -71,6 +71,27 @@ export default function AssetContent({
             <MetaFull ddo={asset} />
             <EditHistory receipts={receipts} setReceipts={setReceipts} />
             {debug === true && <DebugOutput title="DDO" output={asset} />}
+            {asset?.services[0]?.assistant &&
+            asset?.services[0]?.assistant.length > 0 ? (
+              <div>
+                <table>
+                  <thead>
+                    <th>Column</th>
+                    <th>Data</th>
+                    <th>Type</th>
+                  </thead>
+                  <tbody>
+                    {asset?.services[0]?.assistant.map((row, rowIndex) => (
+                      <tr key={rowIndex}>
+                        {row.map((cell, cellIndex) => (
+                          <td key={cellIndex}>{cell}</td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : null}
           </div>
         </div>
 

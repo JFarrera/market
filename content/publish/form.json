@@ -102,6 +102,12 @@
         "required": true
       },
       {
+        "name": "assistant",
+        "label": "Columns CSV",
+        "type": "assistant",
+        "required": false
+      },
+      {
         "name": "files",
         "label": "File",
         "prominentHelp": false,
