@@ -103,7 +103,7 @@
       },
       {
         "name": "assistant",
-        "label": "Columns CSV",
+        "label": "Tabular File Assistant",
         "type": "assistant",
         "required": false
       },

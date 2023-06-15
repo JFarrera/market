@@ -19,7 +19,6 @@ import RelatedAssets from '../RelatedAssets'
 import DmButton from '@shared/DirectMessages/DmButton'
 import Web3Feedback from '@components/@shared/Web3Feedback'
 import { useWeb3 } from '@context/Web3'
-import MetaItem from './MetaItem'
 
 export default function AssetContent({
   asset

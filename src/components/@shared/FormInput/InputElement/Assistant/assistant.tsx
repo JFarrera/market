@@ -6,37 +6,31 @@ import styles from './assistant.module.css'
 import InputElement from '..'
 import { InputProps } from '@shared/FormInput'
 
-// export interface QueryInput {
-//   column: string
-//   type: string
-//   data: string
-// }
-
 export default function DynamicInputs(props: InputProps): ReactElement {
   const { form } = props
   const [field] = useField(props.name)
   const { setFieldValue } = useFormikContext<FormPublishData>()
 
   const [currentColumn, setCurrentColumn] = useState('')
+  const [currentUnit, setCurrentUnit] = useState('')
   const [currentType, setCurrentType] = useState('')
-  const [currentData, setCurrentData] = useState('')
   const [disabledButton, setDisabledButton] = useState(true)
   const [inputs, setInputs] = useState([])
   const [successMessage, setSuccessMessage] = useState('')
 
   const addInput = () => {
-    setInputs((prev) => [...prev, [currentColumn, currentData, currentType]])
+    setInputs((prev) => [...prev, [currentColumn, currentType, currentUnit]])
     setCurrentColumn('')
-    setCurrentData('')
     setCurrentType('')
+    setCurrentUnit('')
   }
 
   const removeInput = (i: number) => {
     const newInputs = inputs.filter((input, index) => index !== i)
     setInputs(newInputs)
     setCurrentColumn('')
-    setCurrentData('')
     setCurrentType('')
+    setCurrentUnit('')
   }
 
   const handleSubmit = () => {
@@ -54,10 +48,10 @@ export default function DynamicInputs(props: InputProps): ReactElement {
 
     if (fieldName.endsWith('column')) {
       setCurrentColumn(e.target.value)
-    } else if (fieldName.endsWith('data')) {
-      setCurrentData(e.target.value)
     } else if (fieldName.endsWith('type')) {
       setCurrentType(e.target.value)
+    } else if (fieldName.endsWith('unit')) {
+      setCurrentUnit(e.target.value)
     }
 
     return e
@@ -68,8 +62,8 @@ export default function DynamicInputs(props: InputProps): ReactElement {
   }, [inputs])
 
   useEffect(() => {
-    setDisabledButton(!currentColumn || !currentData)
-  }, [currentColumn, currentData, currentType])
+    setDisabledButton(!currentColumn)
+  }, [currentColumn, currentType, currentUnit])
 
   return (
     <div className={styles.generalContainer}>
@@ -83,16 +77,16 @@ export default function DynamicInputs(props: InputProps): ReactElement {
         />
         <InputElement
           className={styles.input}
-          name={`${field.name}.data`}
-          placeholder="data"
-          value={currentData}
+          name={`${field.name}.type`}
+          placeholder="type (e.g. string, bool, int,...)"
+          value={currentType}
           onChange={handleChange}
         />
         <InputElement
           className={styles.input}
-          name={`${field.name}.type`}
-          placeholder="type"
-          value={currentType}
+          name={`${field.name}.unit`}
+          placeholder="unit (e.g. m, km, l, s, g, kg, ...)"
+          value={currentUnit}
           onChange={handleChange}
         />
         <Button
@@ -119,13 +113,13 @@ export default function DynamicInputs(props: InputProps): ReactElement {
               />
 
               <InputElement
-                name={`input[${i}].data`}
+                name={`input[${i}].type`}
                 value={input[1]}
                 disabled
               />
 
               <InputElement
-                name={`input[${i}].type`}
+                name={`input[${i}].unit`}
                 value={input[2]}
                 disabled
               />
