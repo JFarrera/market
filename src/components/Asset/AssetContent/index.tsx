@@ -77,8 +77,8 @@ export default function AssetContent({
                 <table className={styles.table}>
                   <thead>
                     <th>Column</th>
-                    <th>Data</th>
                     <th>Type</th>
+                    <th>Unit</th>
                   </thead>
                   <tbody>
                     {asset?.services[0]?.assistant.map((row, rowIndex) => (
