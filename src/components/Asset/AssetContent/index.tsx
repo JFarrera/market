@@ -19,6 +19,7 @@ import RelatedAssets from '../RelatedAssets'
 import DmButton from '@shared/DirectMessages/DmButton'
 import Web3Feedback from '@components/@shared/Web3Feedback'
 import { useWeb3 } from '@context/Web3'
+import MetaItem from './MetaItem'
 
 export default function AssetContent({
   asset
@@ -73,8 +74,8 @@ export default function AssetContent({
             {debug === true && <DebugOutput title="DDO" output={asset} />}
             {asset?.services[0]?.assistant &&
             asset?.services[0]?.assistant.length > 0 ? (
-              <div>
-                <table>
+              <div className={styles.tableContainer}>
+                <table className={styles.table}>
                   <thead>
                     <th>Column</th>
                     <th>Data</th>

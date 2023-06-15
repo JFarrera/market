@@ -80,6 +80,8 @@ export async function transformPublishFormToDdo(
     dockerImageCustomChecksum
   } = metadata
   const { access, files, links, providerUrl, timeout, assistant } = services[0]
+  // console.log('services', services[0])
+  // console.log('assistant', assistant)
 
   const did = nftAddress ? generateDid(nftAddress, chainId) : '0x...'
   const currentTime = dateToStringNoMS(new Date())

@@ -65,7 +65,7 @@ export default function InputElement({
 
   switch (props.type) {
     case 'assistant': {
-      return <DynamicInputs />
+      return <DynamicInputs {...field} form={form} {...props} />
     }
     case 'select': {
       const sortedOptions =

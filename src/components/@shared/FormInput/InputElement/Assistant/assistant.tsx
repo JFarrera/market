@@ -1,29 +1,47 @@
-import React, { useState } from 'react'
-import CustomInput from './customInput'
+import React, { useState, ReactElement, ChangeEvent, useEffect } from 'react'
 import { FormPublishData } from '@components/Publish/_types'
-import { useFormikContext } from 'formik'
+import { useField, useFormikContext } from 'formik'
+import Button from '@components/@shared/atoms/Button'
+import styles from './assistant.module.css'
+import InputElement from '..'
+import { InputProps } from '@shared/FormInput'
 
-export default function DynamicInputs() {
-  const [inputValues, setInputValues] = useState([])
-  const [column, setColumn] = useState('')
-  const [data, setData] = useState('')
-  const [type, setType] = useState('')
-  const { values, setFieldValue } = useFormikContext<FormPublishData>()
+// export interface QueryInput {
+//   column: string
+//   type: string
+//   data: string
+// }
+
+export default function DynamicInputs(props: InputProps): ReactElement {
+  const { form } = props
+  const [field] = useField(props.name)
+  const { setFieldValue } = useFormikContext<FormPublishData>()
+
+  const [currentColumn, setCurrentColumn] = useState('')
+  const [currentType, setCurrentType] = useState('')
+  const [currentData, setCurrentData] = useState('')
+  const [disabledButton, setDisabledButton] = useState(true)
+  const [inputs, setInputs] = useState([])
   const [successMessage, setSuccessMessage] = useState('')
 
-  const handleAddInput = () => {
-    if (column && data) {
-      const newInput = [column, data, type]
-      setInputValues([...inputValues, newInput])
-      setColumn('')
-      setData('')
-      setType('')
-    }
+  const addInput = () => {
+    setInputs((prev) => [...prev, [currentColumn, currentData, currentType]])
+    setCurrentColumn('')
+    setCurrentData('')
+    setCurrentType('')
+  }
+
+  const removeInput = (i: number) => {
+    const newInputs = inputs.filter((input, index) => index !== i)
+    setInputs(newInputs)
+    setCurrentColumn('')
+    setCurrentData('')
+    setCurrentType('')
   }
 
   const handleSubmit = () => {
-    if (inputValues.length > 0) {
-      setFieldValue('services[0].assistant', inputValues)
+    if (inputs.length > 0) {
+      setFieldValue('services[0].assistant', inputs)
       setSuccessMessage('Added correctly!')
       setTimeout(() => {
         setSuccessMessage('')
@@ -31,53 +49,105 @@ export default function DynamicInputs() {
     }
   }
 
-  const handleCancelInput = (index) => {
-    const updatedInputs = [...inputValues]
-    updatedInputs.splice(index, 1)
-    setInputValues(updatedInputs)
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    const fieldName = e.target.name
+
+    if (fieldName.endsWith('column')) {
+      setCurrentColumn(e.target.value)
+    } else if (fieldName.endsWith('data')) {
+      setCurrentData(e.target.value)
+    } else if (fieldName.endsWith('type')) {
+      setCurrentType(e.target.value)
+    }
+
+    return e
   }
 
+  useEffect(() => {
+    form.setFieldValue(`${field.name}`, inputs)
+  }, [inputs])
+
+  useEffect(() => {
+    setDisabledButton(!currentColumn || !currentData)
+  }, [currentColumn, currentData, currentType])
+
   return (
-    <div>
-      {inputValues.map((input, index) => (
-        <div key={index}>
-          <CustomInput
-            column={input[0]}
-            data={input[1]}
-            type={input[2]}
-            onCancel={() => handleCancelInput(index)}
-          />
-        </div>
-      ))}
-      <div>
-        <input
-          type="text"
-          placeholder="Column"
-          value={column}
-          onChange={(e) => setColumn(e.target.value)}
+    <div className={styles.generalContainer}>
+      <div className={styles.inputContainer}>
+        <InputElement
+          className={styles.input}
+          name={`${field.name}.column`}
+          placeholder="column"
+          value={currentColumn}
+          onChange={handleChange}
         />
-        <select value={data} onChange={(e) => setData(e.target.value)}>
-          <option value="">Select option</option>
-          <option value="integer">integer</option>
-          <option value="float">float</option>
-          <option value="double">double</option>
-          <option value="string">string</option>
-          <option value="boolean">boolean</option>
-          <option value="binary">binary</option>
-          <option value="date">date</option>
-          <option value="time">time</option>
-          <option value="datetime">datetime</option>
-        </select>
-        <input
-          type="text"
-          placeholder="e.g (m, cm, kg, g, l, ...)"
-          value={type}
-          onChange={(e) => setType(e.target.value)}
+        <InputElement
+          className={styles.input}
+          name={`${field.name}.data`}
+          placeholder="data"
+          value={currentData}
+          onChange={handleChange}
         />
-        <button onClick={handleAddInput}>Add Input</button>
+        <InputElement
+          className={styles.input}
+          name={`${field.name}.type`}
+          placeholder="type"
+          value={currentType}
+          onChange={handleChange}
+        />
+        <Button
+          style="primary"
+          size="small"
+          onClick={(e: React.SyntheticEvent) => {
+            e.preventDefault()
+            addInput()
+          }}
+          disabled={disabledButton}
+        >
+          add
+        </Button>
       </div>
+
+      {inputs.length > 0 &&
+        inputs.map((input, i) => {
+          return (
+            <div className={styles.inputAddedContainer} key={`input_${i}`}>
+              <InputElement
+                name={`input[${i}].column`}
+                value={input[0]}
+                disabled
+              />
+
+              <InputElement
+                name={`input[${i}].data`}
+                value={input[1]}
+                disabled
+              />
+
+              <InputElement
+                name={`input[${i}].type`}
+                value={input[2]}
+                disabled
+              />
+
+              <Button
+                style="primary"
+                size="small"
+                onClick={(e: React.SyntheticEvent) => {
+                  e.preventDefault()
+                  removeInput(i)
+                }}
+                disabled={false}
+              >
+                remove
+              </Button>
+            </div>
+          )
+        })}
       {successMessage && <p>{successMessage}</p>}
-      <button onClick={handleSubmit}>Submit</button>
+      <Button style="primary" onClick={handleSubmit}>
+        Submit
+      </Button>
     </div>
   )
 }
