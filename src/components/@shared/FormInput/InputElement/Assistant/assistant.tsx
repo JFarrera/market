@@ -6,7 +6,7 @@ import styles from './assistant.module.css'
 import InputElement from '..'
 import { InputProps } from '@shared/FormInput'
 
-export default function DynamicInputs(props: InputProps): ReactElement {
+export default function AssistantInputs(props: InputProps): ReactElement {
   const { form } = props
   const [field] = useField(props.name)
   const { setFieldValue } = useFormikContext<FormPublishData>()
